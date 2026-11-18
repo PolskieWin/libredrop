@@ -14,8 +14,18 @@ LibreDrop is an open-source, local network file and message transfer application
 | **x86_64 APK** | Android Emulators & Chromebooks | [Download x86_64 APK](https://github.com/PolskieWin/libredrop/releases/download/v1.0.0/LibreDrop-v1.0.0-x86_64.apk) | ~2.0 MB |
 | **Linux aarch64 CLI** | Termux & ARM64 Linux Servers | [Download aarch64 Tarball](https://github.com/PolskieWin/libredrop/releases/download/v1.0.0/libredrop-v1.0.0-linux-aarch64.tar.gz) | ~843 KB |
 | **Linux x86_64 CLI** | 64-bit Linux Desktops & Servers | [Download x86_64 Binary](https://github.com/PolskieWin/libredrop/releases/download/v1.0.0/libredrop-cli-linux-x86_64) | ~941 KB |
+| **Windows x86_64 Bundle** | Windows 10 & 11 (CLI + Web Gateway + Launchers) | [Download Windows Bundle](https://github.com/PolskieWin/libredrop/releases/download/v1.0.0/LibreDrop-v1.0.0-windows-x86_64.zip) | ~1.1 MB |
 
 All packages can also be found on the [GitHub Releases Page](https://github.com/PolskieWin/libredrop/releases/tag/v1.0.0).
+
+---
+
+## Windows Quick Start
+
+1. Download [LibreDrop-v1.0.0-windows-x86_64.zip](https://github.com/PolskieWin/libredrop/releases/download/v1.0.0/LibreDrop-v1.0.0-windows-x86_64.zip) and extract it anywhere on your PC.
+2. **Web Gateway**: Double-click `run-libredrop-web.bat` to launch the background server and open the Web UI directly in your default browser.
+3. **Receiver Daemon**: Double-click `run-libredrop-listen.bat` to receive files from phones and laptops directly into your Windows `Downloads` folder.
+4. **Command Prompt / PowerShell**: Run `powershell -ExecutionPolicy Bypass -File install-windows.ps1` to add `libredrop` to your PATH and create a Desktop shortcut.
 
 ---
 

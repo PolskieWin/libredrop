@@ -49,3 +49,48 @@ pub fn format_bytes(bytes: u64) -> String {
 pub fn format_speed(bytes_per_sec: u64) -> String {
     format!("{}/s", format_bytes(bytes_per_sec))
 }
+
+pub fn get_default_download_dir() -> String {
+    #[cfg(target_os = "windows")]
+    {
+        if let Ok(userprofile) = std::env::var("USERPROFILE") {
+            let path = std::path::PathBuf::from(userprofile).join("Downloads");
+            if path.exists() {
+                return path.to_string_lossy().to_string();
+            }
+        }
+    }
+    #[cfg(not(target_os = "windows"))]
+    {
+        if let Ok(home) = std::env::var("HOME") {
+            let path = std::path::PathBuf::from(home).join("Downloads");
+            if path.exists() {
+                return path.to_string_lossy().to_string();
+            }
+        }
+    }
+    "./Downloads".to_string()
+}
+
+pub fn get_default_device_model() -> String {
+    #[cfg(target_os = "windows")]
+    {
+        "Windows PC".to_string()
+    }
+    #[cfg(target_os = "android")]
+    {
+        "Android Device".to_string()
+    }
+    #[cfg(target_os = "macos")]
+    {
+        "macOS Device".to_string()
+    }
+    #[cfg(all(target_os = "linux", not(target_os = "android")))]
+    {
+        "Linux PC".to_string()
+    }
+    #[cfg(not(any(target_os = "windows", target_os = "android", target_os = "macos", target_os = "linux")))]
+    {
+        "LibreDrop Node".to_string()
+    }
+}

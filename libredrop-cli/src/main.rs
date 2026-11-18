@@ -257,7 +257,6 @@ async fn cmd_send_message(
 async fn cmd_web(port: u16) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let mut config = DropConfig::default();
     config.port = port;
-    config.download_dir = "./Downloads".to_string();
 
     let server = WebDropServer::new(config, port);
     let local_ip = get_local_ip();
@@ -268,6 +267,25 @@ async fn cmd_web(port: u16) -> Result<(), Box<dyn std::error::Error + Send + Syn
     println!("  -> http://{}:{}", local_ip, port);
     println!("  -> http://127.0.0.1:{}", port);
     println!("Press Ctrl+C to stop...");
+
+    #[cfg(target_os = "windows")]
+    {
+        let _ = std::process::Command::new("cmd")
+            .args(["/C", "start", &format!("http://127.0.0.1:{}", port)])
+            .spawn();
+    }
+    #[cfg(target_os = "macos")]
+    {
+        let _ = std::process::Command::new("open")
+            .arg(&format!("http://127.0.0.1:{}", port))
+            .spawn();
+    }
+    #[cfg(all(target_os = "linux", not(target_os = "android")))]
+    {
+        let _ = std::process::Command::new("xdg-open")
+            .arg(&format!("http://127.0.0.1:{}", port))
+            .spawn();
+    }
 
     loop {
         sleep(Duration::from_secs(60)).await;

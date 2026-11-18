@@ -84,14 +84,19 @@ pub struct DropConfig {
 
 impl Default for DropConfig {
     fn default() -> Self {
+        #[cfg(target_os = "windows")]
+        let dev_type = DeviceType::Desktop;
+        #[cfg(not(target_os = "windows"))]
+        let dev_type = DeviceType::Mobile;
+
         Self {
             device_id: "ld-node".to_string(),
-            alias: "LibreDrop Node".to_string(),
-            device_model: "Linux/Android".to_string(),
-            device_type: DeviceType::Mobile,
+            alias: crate::utils::get_default_device_model(),
+            device_model: crate::utils::get_default_device_model(),
+            device_type: dev_type,
             port: 53317,
             discovery_port: 53318,
-            download_dir: "./Downloads".to_string(),
+            download_dir: crate::utils::get_default_download_dir(),
             auto_accept: false,
         }
     }

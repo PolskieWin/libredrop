@@ -1,4 +1,4 @@
-name: Build LibreDrop (Android 14+ & Rust Native)
+name: Build LibreDrop (Android, Linux & Windows)
 
 on:
   push:
@@ -8,8 +8,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    name: Build Native Engine, APKs & CLI
+  build-android-linux:
+    name: Build Android APKs & Linux CLI
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -80,5 +80,50 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: libredrop-v1.0.0-binaries
+          name: libredrop-v1.0.0-android-linux
           path: release-assets/*
+
+  build-windows:
+    name: Build Windows x86_64 Binary
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Build Windows Executable
+        run: |
+          cargo build --release -p libredrop-cli
+
+      - name: Package Windows Release Archive
+        shell: pwsh
+        run: |
+          $ReleaseDir = "release-windows"
+          New-Item -ItemType Directory -Path $ReleaseDir -Force
+          Copy-Item "target\release\libredrop.exe" "$ReleaseDir\"
+          Copy-Item "run-libredrop-web.bat" "$ReleaseDir\"
+          Copy-Item "run-libredrop-listen.bat" "$ReleaseDir\"
+          Copy-Item "install-windows.ps1" "$ReleaseDir\"
+          Copy-Item "README.md" "$ReleaseDir\"
+          Compress-Archive -Path "$ReleaseDir\*" -DestinationPath "LibreDrop-v1.0.0-windows-x86_64.zip" -Force
+          Get-Item "LibreDrop-v1.0.0-windows-x86_64.zip" | Select-Object Name, Length
+
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libredrop-windows-x86_64
+          path: LibreDrop-v1.0.0-windows-x86_64.zip
+
+      - name: Attach Windows Archive to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0
+          files: LibreDrop-v1.0.0-windows-x86_64.zip
