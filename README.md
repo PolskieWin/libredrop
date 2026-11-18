@@ -2,6 +2,23 @@
 
 LibreDrop is an open-source, local network file and message transfer application built in Rust and Kotlin. It enables direct peer-to-peer data transfers between devices on the same Wi-Fi network or mobile hotspot with zero compression, zero downscaling, and no external relays or subscriptions.
 
+---
+
+## Direct Download (Latest Release v1.0.0)
+
+| Package | Architecture | Direct Download Link | Size |
+|---|---|---|---|
+| **Universal APK** | All Android Devices (arm64, armv7, x86_64) | [Download Universal APK](https://github.com/PolskieWin/libredrop/releases/download/v1.0.0/LibreDrop-v1.0.0-universal.apk) | ~3.5 MB |
+| **ARMv8 64-bit APK** | Modern 64-bit Smartphones | [Download arm64-v8a APK](https://github.com/PolskieWin/libredrop/releases/download/v1.0.0/LibreDrop-v1.0.0-arm64-v8a.apk) | ~1.9 MB |
+| **ARMv7 32-bit APK** | Legacy 32-bit Phones & Tablets | [Download armeabi-v7a APK](https://github.com/PolskieWin/libredrop/releases/download/v1.0.0/LibreDrop-v1.0.0-armeabi-v7a.apk) | ~1.7 MB |
+| **x86_64 APK** | Android Emulators & Chromebooks | [Download x86_64 APK](https://github.com/PolskieWin/libredrop/releases/download/v1.0.0/LibreDrop-v1.0.0-x86_64.apk) | ~2.0 MB |
+| **Linux aarch64 CLI** | Termux & ARM64 Linux Servers | [Download aarch64 Tarball](https://github.com/PolskieWin/libredrop/releases/download/v1.0.0/libredrop-v1.0.0-linux-aarch64.tar.gz) | ~843 KB |
+| **Linux x86_64 CLI** | 64-bit Linux Desktops & Servers | [Download x86_64 Binary](https://github.com/PolskieWin/libredrop/releases/download/v1.0.0/libredrop-cli-linux-x86_64) | ~941 KB |
+
+All packages can also be found on the [GitHub Releases Page](https://github.com/PolskieWin/libredrop/releases/tag/v1.0.0).
+
+---
+
 ## Key Technical Specifications
 
 - **Native Rust Core Engine**: Uses non-blocking asynchronous TCP/UDP networking (Tokio) for high-throughput streaming with 512 KB chunk buffering and `TCP_NODELAY`.
