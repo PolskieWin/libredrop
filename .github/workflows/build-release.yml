@@ -1,0 +1,84 @@
+name: Build LibreDrop (Android 14+ & Rust Native)
+
+on:
+  push:
+    branches: [ "main" ]
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Native Engine, APKs & CLI
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-disabled: true
+
+      - name: Install Android NDK & Platforms
+        run: |
+          yes | ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --install "ndk;26.1.10909125" "platforms;android-35" "build-tools;35.0.0"
+          echo "ANDROID_NDK_HOME=${ANDROID_HOME}/ndk/26.1.10909125" >> $GITHUB_ENV
+
+      - name: Set up Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android, armv7-linux-androideabi, x86_64-linux-android
+
+      - name: Install cargo-ndk
+        run: cargo install cargo-ndk
+
+      - name: Build Rust Native Engine (cdylib for Android)
+        run: |
+          cd libredrop-engine
+          cargo ndk -t arm64-v8a -t armeabi-v7a -t x86_64 -o ../app/src/main/jniLibs build --release
+
+      - name: Build Android APK with Gradle
+        run: ./gradlew assembleRelease --stacktrace
+
+      - name: Build Linux x86_64 CLI
+        run: |
+          cargo build --release -p libredrop-cli
+          mkdir -p release-assets
+          cp target/release/libredrop release-assets/libredrop-cli-linux-x86_64
+
+      - name: Prepare APK Variants
+        run: |
+          mkdir -p release-assets
+          cd app/build/outputs/apk/release/
+          for f in *.apk; do
+            if [[ "$f" == *"universal"* ]]; then
+              cp "$f" "${GITHUB_WORKSPACE}/release-assets/LibreDrop-v1.0.0-universal.apk"
+            elif [[ "$f" == *"arm64-v8a"* ]]; then
+              cp "$f" "${GITHUB_WORKSPACE}/release-assets/LibreDrop-v1.0.0-arm64-v8a.apk"
+            elif [[ "$f" == *"armeabi-v7a"* ]]; then
+              cp "$f" "${GITHUB_WORKSPACE}/release-assets/LibreDrop-v1.0.0-armeabi-v7a.apk"
+            elif [[ "$f" == *"x86_64"* ]]; then
+              cp "$f" "${GITHUB_WORKSPACE}/release-assets/LibreDrop-v1.0.0-x86_64.apk"
+            else
+              cp "$f" "${GITHUB_WORKSPACE}/release-assets/$f"
+            fi
+          done
+          cd "${GITHUB_WORKSPACE}/release-assets"
+          ls -lh
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: libredrop-v1.0.0-binaries
+          path: release-assets/*
