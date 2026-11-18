@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LibreDrop</string>
+    <string name="radar_title">LibreDrop Radar</string>
+    <string name="transfers_title">Transfers</string>
+    <string name="web_drop_title">Web Drop</string>
+    <string name="settings_title">Settings</string>
+</resources>

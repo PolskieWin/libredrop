@@ -1,0 +1,17 @@
+[package]
+name = "libredrop-cli"
+version = "1.0.0"
+edition = "2021"
+authors = ["LibreDrop Contributors", "Tobiasz (PolskieWin)"]
+description = "Command-line interface for LibreDrop"
+license = "MIT"
+
+[[bin]]
+name = "libredrop"
+path = "src/main.rs"
+
+[dependencies]
+libredrop-core = { path = "../libredrop-core" }
+tokio = { version = "1.40", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"

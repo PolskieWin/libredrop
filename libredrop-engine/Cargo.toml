@@ -1,0 +1,18 @@
+[package]
+name = "libredrop-engine"
+version = "1.0.0"
+edition = "2021"
+authors = ["LibreDrop Contributors", "Tobiasz (PolskieWin)"]
+description = "Android JNI native bindings and shared library for LibreDrop"
+license = "MIT"
+
+[lib]
+name = "libredrop_engine"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+libredrop-core = { path = "../libredrop-core" }
+jni = { version = "0.21.1", default-features = false }
+tokio = { version = "1.40", features = ["rt-multi-thread", "net", "io-util", "sync", "time", "macros", "fs"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
